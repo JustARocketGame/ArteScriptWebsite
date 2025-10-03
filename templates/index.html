@@ -1,0 +1,388 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Arte Script - Programming Language</title>
+    <link rel="shortcut icon" href="/logo" type="image/png">
+    <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@300;400;600;700&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'JetBrains Mono', 'Consolas', 'Monaco', monospace;
+            background: linear-gradient(135deg, #0f1b33 0%, #1a2c4e 50%, #0f1b33 100%);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #ffffff;
+            position: relative;
+            overflow-x: hidden;
+            padding: 20px; /* Добавлено для отступов на маленьких экранах */
+        }
+
+        body::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: 
+                radial-gradient(circle at 20% 80%, rgba(0, 212, 255, 0.1) 0%, transparent 50%),
+                radial-gradient(circle at 80% 20%, rgba(0, 153, 255, 0.1) 0%, transparent 50%),
+                radial-gradient(circle at 40% 40%, rgba(100, 77, 255, 0.05) 0%, transparent 50%);
+            pointer-events: none;
+        }
+
+        .container {
+            background: rgba(18, 18, 28, 0.95);
+            padding: 4rem;
+            border-radius: 20px;
+            box-shadow: 
+                0 25px 50px rgba(0, 0, 0, 0.4),
+                inset 0 1px 0 rgba(255, 255, 255, 0.1);
+            text-align: center;
+            backdrop-filter: blur(15px);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            max-width: 650px;
+            width: 100%; /* Изменено с 90% на 100% для лучшего контроля */
+            animation: fadeInUp 0.8s ease-out;
+            position: relative;
+            z-index: 1;
+        }
+
+        .container::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            border-radius: 20px;
+            padding: 2px;
+            background: linear-gradient(135deg, rgba(0, 212, 255, 0.3), rgba(0, 153, 255, 0.1));
+            -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+            -webkit-mask-composite: xor;
+            mask-composite: exclude;
+            pointer-events: none;
+        }
+
+        .logo {
+            font-size: 3.3rem;
+            margin-bottom: 1.2rem;
+            background: linear-gradient(135deg, #00d4ff 0%, #0099ff 30%, #6677ff 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            font-weight: 700;
+            letter-spacing: 2px;
+            text-shadow: 0 0 30px rgba(0, 212, 255, 0.3);
+            position: relative;
+            display: inline-block;
+            word-break: break-word; /* Добавлено для предотвращения выхода текста за границы */
+        }
+
+        .logo::after {
+            content: '';
+            position: absolute;
+            bottom: -5px;
+            left: 10%;
+            width: 80%;
+            height: 2px;
+            background: linear-gradient(90deg, transparent, #00d4ff, transparent);
+        }
+
+        .tagline {
+            font-size: 1.3rem;
+            margin-bottom: 2.5rem;
+            color: #b0b0d0;
+            font-weight: 300;
+            line-height: 1.6;
+            letter-spacing: 0.5px;
+            word-break: break-word; /* Добавлено для предотвращения выхода текста за границы */
+        }
+
+        .download-btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 15px;
+            background: linear-gradient(135deg, #00d4ff 0%, #0099ff 100%);
+            color: #001a33;
+            padding: 18px 45px;
+            border-radius: 12px;
+            text-decoration: none;
+            font-weight: 600;
+            font-size: 1.2rem;
+            transition: all 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+            box-shadow: 
+                0 10px 25px rgba(0, 212, 255, 0.4),
+                0 0 0 1px rgba(255, 255, 255, 0.1);
+            border: none;
+            cursor: pointer;
+            margin-bottom: 0.5rem;
+            position: relative;
+            overflow: hidden;
+            max-width: 100%; /* Добавлено для предотвращения выхода за границы */
+        }
+
+        .download-btn::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+            transition: left 0.6s;
+        }
+
+        .download-btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 
+                0 15px 35px rgba(0, 212, 255, 0.5),
+                0 0 0 1px rgba(255, 255, 255, 0.15);
+        }
+
+        .download-btn:hover::before {
+            left: 100%;
+        }
+
+        .download-btn svg {
+            transition: transform 0.3s ease;
+        }
+
+        .download-btn:hover svg {
+            transform: translateY(-1.5px);
+        }
+
+        .code-example {
+            background: linear-gradient(135deg, #1a1a2a 0%, #161622 100%);
+            padding: 2rem;
+            border-radius: 12px;
+            margin: 2.5rem 0;
+            text-align: left;
+            border-left: 4px solid #00d4ff;
+            box-shadow: 
+                inset 0 1px 0 rgba(255, 255, 255, 0.05),
+                0 10px 30px rgba(0, 0, 0, 0.3);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .code-example::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 1px;
+            background: linear-gradient(90deg, transparent, #00d4ff, transparent);
+        }
+
+        .code-example pre {
+            color: #00ffaa;
+            font-size: 0.95rem;
+            overflow-x: auto; /* Добавлено для горизонтальной прокрутки при необходимости */
+            text-shadow: 0 0 10px rgba(0, 255, 170, 0.3);
+            line-height: 1.5;
+            white-space: pre-wrap; /* Изменено для переноса длинных строк */
+            word-break: break-all; /* Добавлено для переноса длинных слов */
+        }
+
+        .code-comment { color: #6a737d; }
+        .code-string { color: #00ffaa; }
+        .code-function { color: #79b8ff; }
+        .code-keyword { color: #ff7b72; }
+
+        .features {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+            gap: 1.2rem;
+            margin-top: 1rem;
+        }
+
+        .feature {
+            background: linear-gradient(135deg, rgba(255, 255, 255, 0.05) 0%, rgba(255, 255, 255, 0.02) 100%);
+            padding: 1.5rem;
+            border-radius: 12px;
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .feature::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 1px;
+            background: linear-gradient(90deg, transparent, rgba(0, 212, 255, 0.5), transparent);
+        }
+
+        .feature:hover {
+            transform: translateY(-5px);
+            border-color: rgba(0, 212, 255, 0.3);
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
+        }
+
+        .feature h3 {
+            color: #00d4ff;
+            margin-bottom: 0.8rem;
+            font-size: 1.1rem;
+            font-weight: 600;
+        }
+
+        .feature p {
+            color: #a0a0c0;
+            font-size: 0.9rem;
+            line-height: 1.5;
+        }
+
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(40px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes float {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-10px); }
+        }
+
+        .floating {
+            animation: float 6s ease-in-out infinite;
+        }
+
+        /* Улучшенные медиа-запросы для мобильных устройств */
+        @media (max-width: 768px) {
+            .container {
+                padding: 2.5rem 2rem;
+            }
+            
+            .logo {
+                font-size: 2.8rem;
+            }
+            
+            .tagline {
+                font-size: 1.1rem;
+            }
+            
+            .download-btn {
+                padding: 16px 35px;
+                font-size: 1.1rem;
+            }
+            
+            .code-example {
+                padding: 1.5rem;
+            }
+            
+            .features {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        @media (max-width: 480px) {
+            body {
+                padding: 15px; /* Уменьшен отступ для очень маленьких экранов */
+            }
+            
+            .container {
+                padding: 2rem 1.5rem;
+            }
+            
+            .logo {
+                font-size: 2.5rem;
+            }
+            
+            .tagline {
+                font-size: 1rem;
+            }
+            
+            .download-btn {
+                padding: 14px 25px;
+                font-size: 1rem;
+            }
+            
+            .code-example {
+                padding: 1.2rem;
+            }
+            
+            .code-example pre {
+                font-size: 0.85rem;
+            }
+            
+            .feature {
+                padding: 1.2rem;
+            }
+        }
+
+        @media (max-width: 360px) {
+            .container {
+                padding: 1.5rem 1rem;
+            }
+            
+            .logo {
+                font-size: 2.2rem;
+            }
+            
+            .tagline {
+                font-size: 0.9rem;
+            }
+            
+            .download-btn {
+                padding: 12px 20px;
+                font-size: 0.9rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    
+    <div class="container floating">
+        <div class="logo">Arte Script</div>
+        <div class="tagline">Elegant programming language for modern developers</div>
+        
+        <a href="/download" class="download-btn">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
+                <path d="M19 9h-4V3H9v6H5l7 7 7-7zM5 18v2h14v-2H5z"/>
+            </svg>
+            Download for Windows
+        </a>
+
+        <div class="code-example">
+            <pre><span class="code-comment">// Simple Arte Script example</span>
+<span class="code-keyword">var</span> <span class="code-function">hello</span> = <span class="code-string">"Hello World"</span>;
+<span class="code-function">print</span> hello;
+<span class="code-function">succes</span> <span class="code-string">"Succesefull!"</span>;
+<span class="code-function">error</span> <span class="code-string">"Error!"</span>;
+<span class="code-function">info</span> <span class="code-string">"Information!"</span>;
+<span class="code-keyword">break</span>;</pre>
+        </div>
+
+        <div class="features">
+            <div class="feature">
+                <h3>🚀 Fast</h3>
+                <p>High-performance compilation with optimized execution</p>
+            </div>
+            <div class="feature">
+                <h3>📚 Easy</h3>
+                <p>Comprehensive documentation and learning resources</p>
+            </div>
+        </div>
+    </div>
+
+</body>
+</html>
